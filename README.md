@@ -1,0 +1,2 @@
+# DiPlot
+Qml module "Plot".
