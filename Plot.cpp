@@ -8,6 +8,7 @@
 
 Plot::Plot()
 {
+    connect(&alg, &GeneticAlgorithm::updatePoints, this, &Plot::gaPointsUpdated);
     connect(this, &Plot::pointsUpdatedSig, this, &Plot::pointsUpdated);
     setFlag(ItemHasContents, true);
 
@@ -45,6 +46,16 @@ QList<QObject *> Plot::pointsAsObject() const
     QList<QObject *> res;
     res.reserve(m_points.count());
     for(auto i : m_points)
+        res.append(i);
+
+    return res;
+}
+
+QList<QObject *> Plot::gaPointsAsObject() const
+{
+    QList<QObject *> res;
+    res.reserve(m_gaPoints.count());
+    for(auto i : m_gaPoints)
         res.append(i);
 
     return res;
@@ -128,6 +139,28 @@ void Plot::pointsUpdated(QList<QPointF> *points)
     delete points;
 
     emit pointsChanged();
+}
+
+void Plot::gaPointsUpdated(QVector<QPointF> *points)
+{
+    if(points->size() < m_gaPoints.size())
+        deleteAllPoints();
+    for(int i = 0; i < points->size(); i++){
+        if(m_points.size() > i){
+            m_gaPoints.at(i)->setX(points->at(i).x());
+            m_gaPoints.at(i)->setY(points->at(i).y());
+        }
+        else
+            m_gaPoints.append(new Point(points->at(i).x(), points->at(i).y()));
+    }
+    delete points;
+
+    emit gaPointsChanged();
+}
+
+void Plot::startGA()
+{
+    alg.start(QThread::LowPriority);
 }
 
 

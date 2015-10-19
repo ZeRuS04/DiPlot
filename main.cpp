@@ -9,6 +9,5 @@ int main(int argc, char *argv[])
     qmlRegisterType<Plot>("CustomGeometry", 1, 0, "Graph");
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
     return app.exec();
 }

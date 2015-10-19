@@ -5,25 +5,9 @@ import CustomGeometry 1.0
 Rectangle {
     id: mainRect
     property var samples:[]
-    property var minSampleValue: Number.NEGATIVE_INFINITY
-    property var maxSampleValue: Number.POSITIVE_INFINITY
 
     signal pointSelected(int index);
     signal pointUnselected(int index);
-
-    function limitSamples(samplesf){
-        var tmp = [];
-        tmp = samplesf;
-        var limitedSamples = [];
-        for(var i = 0; i < tmp.length; i++){
-                if(tmp[i] < minSampleValue)
-                    continue;
-                if(tmp[i] > maxSampleValue)
-                    continue;
-            limitedSamples.push(tmp[i])
-        }
-        return limitedSamples
-    }
 
     Flickable{
         id: flickableGraph
@@ -39,80 +23,20 @@ Rectangle {
             Graph{
                 id: graph
                 anchors.fill: parent
-                samples: mainRect.limitSamples(mainRect.samples)
+                samples: mainRect.samples
                 Repeater{
-                    model: graph.points
+                    model: graph.gaPoints
                     delegate: Rectangle{
                         id: rect
-                        width: 15; height: 15;
+                        width: 5; height: 5;
                         x: modelData.px-width/2;
                         y: modelData.py-height/2;
                         radius: width/2
-                        color: "steelblue"
-                        property int i: index
-                        property bool lock: false
-                        Rectangle{
-                            id: vertLine
-                            color: Qt.rgba(0,0,0,0.5)
+                        color: "red"
 
-                            width: 1
-                            height: field.height
-                            visible: false
-                            x: parent.width/2
-                            y: parent.height/2
-                        }
-                        Rectangle{
-                            id: horizLine
-                            color: Qt.rgba(0,0,0,0.5)
-
-                            width: 2*field.width
-                            height: 1
-                            visible: false
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            y: parent.height/2
-                        }
-
-                        MouseArea{
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onEntered: {
-                                if(!rect.lock){
-                                    val.visible = true
-                                    vertLine.visible = true
-                                    horizLine.visible = true
-                                    rect.width*=1.5
-                                    rect.height*=1.5
-                                    rect.color = "orange"
-                                    mainRect.pointSelected(rect.i);
-                                }
-                            }
-                            onExited: {
-                                if(!rect.lock){
-                                    val.visible = false
-                                    vertLine.visible = false
-                                    horizLine.visible = false
-                                    rect.width/=1.5
-                                    rect.height/=1.5
-                                    rect.color = "steelblue"
-                                    mainRect.pointUnselected(rect.i);
-                                }
-                            }
-                            onClicked: {
-                                rect.lock = !rect.lock
-                                rect.color = rect.lock ? "green" : "orange"
-                            }
-                        }
-                        Text{
-                            id: val
-                            anchors.bottom: parent.top
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            visible: false
-                            text: graph.samples[rect.i]
-                            font.pointSize: 14
-                            color: "black"
-                        }
                     }
                 }
+                Component.onCompleted: startGA();
             }
         }
     }

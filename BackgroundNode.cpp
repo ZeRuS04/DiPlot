@@ -48,7 +48,7 @@ void BackgroundNode::updateGeometry(const QRectF &bounds, const QList<qreal> &sa
         vertices[k+2].set(pos.x(), bounds.height());
 
     }
-    vertices[segmentsCount-1].set(bounds.width(), bounds.height());
+    vertices[segmentsCount-1].set(vertices[segmentsCount-2].x, bounds.height());
 
     markDirty(QSGNode::DirtyGeometry);
 }

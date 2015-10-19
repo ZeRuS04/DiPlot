@@ -9,11 +9,21 @@ ApplicationWindow {
     visible: true
 
     Plot{
+        id: plot
         anchors.fill: parent
-        samples: [25, 43,76,21,55.2,-23, 100.8,43,88,9,0,21]
+        samples: []
 
-        // ограничение диапазона выборки:
-        minSampleValue: 20
-        maxSampleValue: 80
+        function generate() {
+            var s = [];
+            for (var i = 0; i < 900; i++){
+                var x = 1 + i/100;
+                var f = Math.log(x) * Math.cos(3*x - 15);
+                s.push(f);
+            }
+
+            plot.samples = s;
+        }
+        Component.onCompleted: generate()
     }
+
 }

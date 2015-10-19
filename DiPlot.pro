@@ -7,7 +7,8 @@ SOURCES += main.cpp \
     Plot.cpp \
     Point.cpp \
     LineNode.cpp \
-    BackgroundNode.cpp
+    BackgroundNode.cpp \
+    GeneticAlgorithm.cpp
 
 RESOURCES += qml.qrc
 
@@ -19,4 +20,5 @@ HEADERS += \
     Plot.h \
     Point.h \
     LineNode.h \
-    BackgroundNode.h
+    BackgroundNode.h \
+    GeneticAlgorithm.h
