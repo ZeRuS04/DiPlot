@@ -20,13 +20,8 @@ public:
     QList<QObject *> pointsAsObject() const;
     //==============================================//
 
-    /*
-     * Список полученых кординат точек на экраене
-     * **********************************************/
-    Q_PROPERTY(QList<int> gaPoints READ gaPoints NOTIFY gaPointsChanged)
-
-    //==============================================//
-
+    Q_PROPERTY(int historyCount READ historyCount NOTIFY historyCountChanged)
+    Q_PROPERTY(int historyIndex READ historyIndex WRITE setHistoryIndex NOTIFY historyIndexChanged)
     /*
      * Элементы выобрки
      * **********************************************/
@@ -36,10 +31,14 @@ public:
 
 
     void deleteAllPoints();     // Удаление всех кординат точек с очищением памяти
-
-    QList<int> gaPoints() const
+    int historyCount() const
     {
-        return m_gaPoints;
+        return m_history.length();
+    }
+
+    int historyIndex() const
+    {
+        return m_historyIndex;
     }
 
 protected:
@@ -54,19 +53,27 @@ public slots:
     void gaPointsUpdated(QList<double> *points);     // Установка значений кординат точек
 
     void startGA();
+    void setHistoryIndex(int historyIndex);
+
 signals:
     void samplesChanged(QList<qreal> samples);
     void pointsChanged();
     void pointsUpdatedSig(QList<QPointF> *points);
     void gaPointsChanged();
 
+    void historyCountChanged();
+    void historyIndexChanged();
+    void clearPointsFlags();
+
 private:
     QList<qreal> m_samples;
     QList<Point *> m_points;
 
+    QVector<QList<double> *> m_history;
+    int m_historyIndex;
+
     bool m_samplesChanged;
     bool m_geometryChanged;
-    QList<int> m_gaPoints;
 
     GeneticAlgorithm alg;
 };

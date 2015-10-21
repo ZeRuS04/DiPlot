@@ -133,17 +133,39 @@ void Plot::pointsUpdated(QList<QPointF> *points)
 
 void Plot::gaPointsUpdated(QList<double> *points)
 {
-    foreach(double i, *points) {
-        int index = (i - 1)*100;
-        m_points.at(index)->setSelected(true);
-    }
-    delete points;
-    emit gaPointsChanged();
+    m_history << points;
+    emit historyCountChanged();
+//    foreach(double i, *points) {
+//        int index = (i - 1)*100;
+//        if(m_points.length() > index && index >= 0)
+//            m_points.at(index)->setSelected(true);
+//    }
+//    delete points;
+//    emit gaPointsChanged();
 }
 
 void Plot::startGA()
 {
+    m_history.clear();
     alg.start(QThread::LowPriority);
+}
+
+void Plot::setHistoryIndex(int historyIndex)
+{
+    if (m_historyIndex == historyIndex || historyIndex == m_history.length())
+        return;
+
+    m_historyIndex = historyIndex;
+    emit clearPointsFlags();
+
+    foreach(double i, *m_history.at(m_historyIndex)) {
+        int index = (i - 1)*100;
+        if(m_points.length() > index && index >= 0)
+            connect(this, &Plot::clearPointsFlags, m_points.at(index), &Point::clearFlags);
+            m_points.at(index)->setSelected(true);
+    }
+    emit pointsChanged();
+    emit historyIndexChanged();
 }
 
 

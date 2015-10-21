@@ -18,12 +18,12 @@ void GeneticAlgorithm::initGenerator()
 
 void GeneticAlgorithm::reproductionOperator()
 {
-    bool parentsCount = 0;
+    int parentsCount = 0;
     gene parentsArray[2];
     m_newGens.clear();
-    for(int i = 0; i < m_genotype.length(); i++) {
+    for(double i = 0; i < m_genotype.length(); i++) {
         gene g = m_genotype.at(i);
-        double chance = i/GA_POWER * GA_P_CROSS;
+        double chance =/* i/GA_POWER **/ GA_P_CROSS;
         double r = static_cast<double>(rand()%100)/100.0;
         if(r <= chance) {
             parentsArray[parentsCount] = g;
@@ -47,15 +47,15 @@ void GeneticAlgorithm::reductionOperator()
     m_genotype << m_newGens;
     qSort(m_genotype);
     if(m_genotype.length() > GA_POWER){
-        m_genotype.remove(GA_POWER, m_genotype.length() - GA_POWER);
+        m_genotype.remove(0, m_genotype.length() - GA_POWER);
     }
 }
 
 void GeneticAlgorithm::mutationOperator()
 {
     for(int i = 0; i < m_newGens.length(); i++) {
-        int p = rand()%100;
-        if(p == 100*GA_P_MUTATE)
+        int p = rand()%1000;
+        if(p <= 1000*GA_P_MUTATE)
         {
             ushort bit = rand()%GA_BITS;
             ushort mask = 1 << bit;
@@ -68,26 +68,28 @@ void GeneticAlgorithm::mutationOperator()
 void GeneticAlgorithm::run()
 {
     initGenerator();
+
     for (int i = 0; i < GA_MAXITER; i++) {
+
+        QList<double> *points = new QList<double>();
+        for( int j = 0; j < GA_POWER; j++){
+            points->append(m_genotype.at(j).x);
+        }
+        emit updatePoints(points);
         reproductionOperator();
         mutationOperator();
         reductionOperator();
 
-//        if(i % 1000 == 0) {
-//        }
-//        QVector<gene> copy = m_genotype;
-//        copy.removeAll(copy.first());
-//        if(copy.isEmpty()){
-//            qDebug() << "===============Fast EXIT!=================";
-//            break;
-//        }
-    }
-    QList<double> *points = new QList<double>();
-    for( int j = 1; j < GA_POWER; j++){
-        points->append(m_genotype.at(m_genotype.length() - j).x);
-    }
-    emit updatePoints(points);
 
-    qDebug() << "END:" << m_genotype.last().fitness;
+        QVector<gene> tmp = m_genotype;
+        tmp.removeAll(tmp.first());
+        if (tmp.isEmpty()) {
+            qDebug() << "EARLY END";
+            qDebug() << "Total iterations: " << i;
+            break;
+        }
+    }
+
+    qDebug() << "Result:" << m_genotype.last().fitness;
 
 }

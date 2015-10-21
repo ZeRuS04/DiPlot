@@ -9,9 +9,9 @@
 
 #define GA_POWER        100
 #define GA_P_CROSS      0.5
-#define GA_P_MUTATE     0.01
+#define GA_P_MUTATE     0.001
 #define GA_BITS         14
-#define GA_MAXITER      10000
+#define GA_MAXITER      100
 
 #define GA_MASK         0x3fff
 
@@ -42,12 +42,12 @@ struct parents {
     gene child_2;
 
     void crossingover() {
-        ushort crossPoint = rand()%(GA_BITS-1) + 2;
+        ushort crossPoint = rand()%(GA_BITS-1);
 
         ushort mask_left, mask_right;
         mask_left = mask_right = 0xffff;
 
-        mask_right >> (crossPoint+2);
+        mask_right = mask_right >> (crossPoint+2);
         mask_left = mask_left^mask_right;
 
         child_1.alleles = parent_1.alleles & mask_left;

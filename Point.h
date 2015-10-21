@@ -32,6 +32,9 @@ public slots:
     void setX(qreal x);
     void setY(qreal y);
 
+    void clearFlags() {
+        setSelected(false);
+    }
 
 signals:
     void xChanged();

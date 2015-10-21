@@ -32,7 +32,7 @@ Rectangle {
                         x: modelData.px-width/2;
                         y: modelData.py-height/2;
                         radius: width/2
-                        color: modelData.selected ? "red" : "green"
+                        color: modelData.selected ? "red" : "transparent"
 
                     }
                 }
@@ -109,6 +109,18 @@ Rectangle {
         orientation: Qt.Vertical
         value: 1
         stepSize: 0.5
+    }
+
+    Slider{
+        id: historySlider
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        minimumValue: 0
+        maximumValue: graph.historyCount
+        orientation: Qt.Horizontal
+        stepSize: 1
+        onValueChanged: graph.historyIndex = value;
     }
 }
 
