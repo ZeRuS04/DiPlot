@@ -25,14 +25,14 @@ Rectangle {
                 anchors.fill: parent
                 samples: mainRect.samples
                 Repeater{
-                    model: graph.gaPoints
+                    model: graph.points
                     delegate: Rectangle{
                         id: rect
                         width: 5; height: 5;
                         x: modelData.px-width/2;
                         y: modelData.py-height/2;
                         radius: width/2
-                        color: "red"
+                        color: modelData.selected ? "red" : "green"
 
                     }
                 }

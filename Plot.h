@@ -23,8 +23,8 @@ public:
     /*
      * Список полученых кординат точек на экраене
      * **********************************************/
-    Q_PROPERTY(QList<QObject *> gaPoints READ gaPointsAsObject NOTIFY gaPointsChanged)
-    QList<QObject *> gaPointsAsObject() const;
+    Q_PROPERTY(QList<int> gaPoints READ gaPoints NOTIFY gaPointsChanged)
+
     //==============================================//
 
     /*
@@ -37,6 +37,11 @@ public:
 
     void deleteAllPoints();     // Удаление всех кординат точек с очищением памяти
 
+    QList<int> gaPoints() const
+    {
+        return m_gaPoints;
+    }
+
 protected:
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *); // Событие отрисовки нод
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry); // Событие изменения геометрии окна
@@ -46,7 +51,7 @@ public slots:
     void removeFirstSample();                       // Удаление первого значения выборки
     void setSamples(QList<qreal> samples);          // Установка значений выборки
     void pointsUpdated(QList<QPointF> *points);     // Установка значений кординат точек
-    void gaPointsUpdated(QVector<QPointF> *points);     // Установка значений кординат точек
+    void gaPointsUpdated(QList<double> *points);     // Установка значений кординат точек
 
     void startGA();
 signals:
@@ -61,7 +66,7 @@ private:
 
     bool m_samplesChanged;
     bool m_geometryChanged;
-    QVector<Point *> m_gaPoints;
+    QList<int> m_gaPoints;
 
     GeneticAlgorithm alg;
 };

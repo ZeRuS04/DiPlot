@@ -4,6 +4,7 @@ Point::Point(qreal x, qreal y, QObject *parent)
   : QObject(parent)
   , m_x(x)
   , m_y(y)
+  , m_selected(false)
 {}
 
 

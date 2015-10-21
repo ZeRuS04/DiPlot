@@ -51,16 +51,6 @@ QList<QObject *> Plot::pointsAsObject() const
     return res;
 }
 
-QList<QObject *> Plot::gaPointsAsObject() const
-{
-    QList<QObject *> res;
-    res.reserve(m_gaPoints.count());
-    for(auto i : m_gaPoints)
-        res.append(i);
-
-    return res;
-}
-
 class PlotNode : public QSGNode
 {
 public:
@@ -141,20 +131,13 @@ void Plot::pointsUpdated(QList<QPointF> *points)
     emit pointsChanged();
 }
 
-void Plot::gaPointsUpdated(QVector<QPointF> *points)
+void Plot::gaPointsUpdated(QList<double> *points)
 {
-    if(points->size() < m_gaPoints.size())
-        deleteAllPoints();
-    for(int i = 0; i < points->size(); i++){
-        if(m_points.size() > i){
-            m_gaPoints.at(i)->setX(points->at(i).x());
-            m_gaPoints.at(i)->setY(points->at(i).y());
-        }
-        else
-            m_gaPoints.append(new Point(points->at(i).x(), points->at(i).y()));
+    foreach(double i, *points) {
+        int index = (i - 1)*100;
+        m_points.at(index)->setSelected(true);
     }
     delete points;
-
     emit gaPointsChanged();
 }
 

@@ -47,15 +47,15 @@ void GeneticAlgorithm::reductionOperator()
     m_genotype << m_newGens;
     qSort(m_genotype);
     if(m_genotype.length() > GA_POWER){
-        m_genotype.remove(500, m_genotype.length() - 500);
+        m_genotype.remove(GA_POWER, m_genotype.length() - GA_POWER);
     }
 }
 
 void GeneticAlgorithm::mutationOperator()
 {
     for(int i = 0; i < m_newGens.length(); i++) {
-        int p = rand()%1000;
-        if(p == 1000*GA_P_MUTATE)
+        int p = rand()%100;
+        if(p == 100*GA_P_MUTATE)
         {
             ushort bit = rand()%GA_BITS;
             ushort mask = 1 << bit;
@@ -67,17 +67,14 @@ void GeneticAlgorithm::mutationOperator()
 
 void GeneticAlgorithm::run()
 {
+    initGenerator();
     for (int i = 0; i < GA_MAXITER; i++) {
-        initGenerator();
         reproductionOperator();
         mutationOperator();
         reductionOperator();
 
-        QVector<QPointF> *points = new QVector<QPointF> ();
-        for( int i = 0; i < 10; i++){
-            points->append(QPointF(m_genotype.at(i).x,m_genotype.at(i).fitness));
-        }
-        emit updatePoints(points);
+//        if(i % 1000 == 0) {
+//        }
 //        QVector<gene> copy = m_genotype;
 //        copy.removeAll(copy.first());
 //        if(copy.isEmpty()){
@@ -85,6 +82,11 @@ void GeneticAlgorithm::run()
 //            break;
 //        }
     }
+    QList<double> *points = new QList<double>();
+    for( int j = 1; j < GA_POWER; j++){
+        points->append(m_genotype.at(m_genotype.length() - j).x);
+    }
+    emit updatePoints(points);
 
     qDebug() << "END:" << m_genotype.last().fitness;
 

@@ -3,14 +3,15 @@
 
 #include <QThread>
 #include <QVector>
+#include <QList>
 #include <QPointF>
 #include <qmath.h>
 
-#define GA_POWER        500
+#define GA_POWER        100
 #define GA_P_CROSS      0.5
-#define GA_P_MUTATE     0.001
+#define GA_P_MUTATE     0.01
 #define GA_BITS         14
-#define GA_MAXITER      16383
+#define GA_MAXITER      10000
 
 #define GA_MASK         0x3fff
 
@@ -75,7 +76,7 @@ protected:
     void run();
 
 signals:
-    void updatePoints(QVector<QPointF> *points);
+    void updatePoints(QList<double> *points);
 public slots:
 
 private:
